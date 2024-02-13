@@ -16,13 +16,13 @@ type MetaMonitorMetricType struct {
 	metaMonitorDecoratorUrl string
 }
 
-var DSSCW_META_MONITOR *MetaMonitorMetricType
+var META_MONITOR *MetaMonitorMetricType
 
 func init() {
 
-	DSSCW_META_MONITOR = &MetaMonitorMetricType{
+	META_MONITOR = &MetaMonitorMetricType{
 		dBRequestLatency: prometheus.NewSummaryVec(prometheus.SummaryOpts{
-			Name:      "dsscw_request_latency_seconds",
+			Name:      "request_latency_seconds",
 			Namespace: NAMESPACE,
 			Subsystem: SUBSYSTEM,
 			Help:      "Latency measure for app manager db requests",
@@ -38,8 +38,8 @@ func init() {
 		granularLabels: false,
 	}
 
-	prometheus.MustRegister(DSSCW_META_MONITOR.dBRequestLatency)
-	prometheus.MustRegister(DSSCW_META_MONITOR.jobLatency)
+	prometheus.MustRegister(META_MONITOR.dBRequestLatency)
+	prometheus.MustRegister(META_MONITOR.jobLatency)
 
 }
 
@@ -77,7 +77,7 @@ func (ms *MetaMonitorMetricType) IsGranularLabelsEnabled() bool {
 // If granular label tracking is on , return actual value, else collapse
 // all labels into generic wild card
 func GetGranularLabel(value string) string {
-	if DSSCW_META_MONITOR.granularLabels {
+	if META_MONITOR.granularLabels {
 		return value
 	}
 	return LABEL_WILDCARD

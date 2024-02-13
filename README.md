@@ -13,6 +13,8 @@
 - **Prometheus**: Initially considered for system monitoring but currently not in use.
 
 
+
+
 _the below scripts adds default data to minio and postgres_
 
 ## To Run locally
