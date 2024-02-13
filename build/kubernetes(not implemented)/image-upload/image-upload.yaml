@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: image-upload-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: image-upload-app
+  template:
+    metadata:
+      labels:
+        app: image-upload-app
+    spec:
+      containers:
+        - name: image-upload-app
+          image: rohitborade777521/image-upload-app
+          ports:
+            - containerPort: 8080

@@ -1,0 +1,314 @@
+syntax = "proto3";
+package s3_service;
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "www.rvb.com/protos/s3_service";
+
+enum RequestResult {
+	UNKNOWN_RESULT = 0;
+	// Request has been rejected
+	REJECTED = 1;
+	// Request has been accepted for processing
+	ACCEPTED = 2;
+}
+
+enum ErrorRetryStatus {
+	// none so user to decide to take further action
+	NONE = 0;
+	// Request can be re-tried
+	RETRY = 1;
+	// Request cannot be re-tried
+	NO_RETRY = 2;
+	// Wait and retry Request
+	WAIT_AND_RETRY = 3;
+}
+
+// Error  global error object for api'sresponse
+message Error {
+	string message = 1;
+	ErrorRetryStatus error_retry_status = 2;
+}
+
+enum ComparisonOperator {
+	COMPARISON_UNKNOWN = 0;
+	CONTAINS = 1;
+	// STRING contains.Case Insensitive. May not be supported for all data types
+	ICONTAINS = 2;
+	EQUAL = 3;
+	LESS_THAN = 4;
+	LESS_THAN_OR_EQUAL = 5;
+	GREATER_THAN = 6;
+	GREATER_THAN_OR_EQUAL = 7;
+}
+
+enum LogicalOperator {
+	AND = 0;
+	OR = 1;
+}
+
+// Enum for the type of presigned operation
+enum PresignedOperation {
+	DOWNLOAD_OPERATION = 0;
+	UPLOAD_OPERATION = 1;
+}
+
+message FilterKeyValue {
+	ComparisonOperator comparison_operator = 2;
+}
+
+message FilterKeyValueSet {
+	Tags tags = 1;
+	FilterKeyValue filter_fields = 2;
+	LogicalOperator logical_operator = 3;
+	SortOperator sort_operator = 4;
+}
+
+enum SortOperator {
+	DEFAULT = 0;
+	ASCENDING = 1;
+	DESCENDING = 2;
+}
+
+message Pagination {
+	// Page token to echo back to get next page, is empty or page token is empty,
+	// then there is no more results
+	string page_token = 1;
+	// page_size
+	uint32 page_size = 2;
+}
+
+message QueryOptions {
+	FilterKeyValueSet filters = 1;
+	Pagination pagination = 2;
+}
+
+enum JobType {
+	UPLOAD_IMAGE = 0;
+	DOWNLOAD_IMAGE = 1;
+}
+
+message Result {
+	RequestResult request_result = 1;
+	// Message is a textual description of reason for rejection, and can be safely passed on to operator through logs
+	// or UI.
+	Error error = 2;
+}
+
+// Storage
+enum DATASTORE {
+	UNKNOWN_DATASTORE = 0;
+	S3 = 1;
+	GCS = 2;
+	AZURE_BLOB = 3;
+}
+
+// CreateOrUpdateBlobRequest - Create or Update a blob in remote storage
+message UploadPatientImageRequest {
+	PatientImage patient_image = 1;
+	Tags tags = 2;
+	// The image file content, sent as bytes
+	bytes content = 3;
+	string filename = 5;
+	// Additional metadata if necessary, like content type
+	string content_type = 4;
+}
+
+// CreateOrUpdateBlobResponse Async job id that needs to tracked for success or failure
+message UploadPatientImageResponse {
+	Result result = 2;
+}
+
+message ImageTag {
+	Image image = 1;
+	Tags tags = 2;
+}
+
+// Retrieve a Blob  to given shared storage path
+message DownloadPatientImageListRequest {
+	Patient patient = 1;
+	Tags tags = 2;
+}
+
+message PatientImage {
+	PatientUI patient = 1;
+	ImageUI image = 2;
+}
+
+// RetrievePatientImageRequest - Search the blobs stored by tags
+message ListPatientImagesRequest {
+	Patient patient = 1;
+	QueryOptions query_option = 2;
+}
+
+// RetrievePatientImageRequest - Download a single image of a patient
+message RetrievePatientImageRequest {
+	Patient patient = 1;
+	Image image = 2;
+}
+
+// RetrievePatientImageRequest - Download a single image of a patient
+message RetrievePatientImageRequestByTags {
+	Patient patient = 1;
+	Image image = 2;
+	Tags tags = 3;
+}
+
+// RetrievePatientImageRequest - Download a single image of a patient
+message DeletePatientImageRequest {
+	Patient patient = 1;
+	Image image = 2;
+	Tags tags = 3;
+}
+
+// SearchPatientImageResponse - Search response matching catalog attributes
+message ListPatientImagesResponse {
+	Patient patient = 1;
+	repeated Image images = 2;
+	Result result = 3;
+}
+
+// ideally should be in a different proto
+message Image {
+	string id = 7;
+	string name = 5;
+	string description = 6;
+	repeated string tags = 4;
+	string bucket_path = 1;
+	string url = 2;
+	google.protobuf.Timestamp upload_time = 3;  // Time when the image was uploaded
+	//  google.protobuf.Timestamp last_access_time = 4; // Time when the image was last accessed
+}
+
+message ImageUI {
+	string name = 1;
+	string description = 2;
+	repeated string tags = 3;
+}
+
+message Tags {
+	repeated string tag = 1;
+}
+
+message Patient {
+	string id = 1;
+	string name = 2;
+	string user_name = 3;
+}
+
+message PatientUI {
+	string id = 1;
+}
+
+message OperationsResult {
+	string name = 1;
+	Result result = 2;
+}
+
+// Storage type for setting the storage provider
+enum DataStorageType {
+	NONE_STORAGETYPE = 0;
+	AWS = 1;
+}
+
+// not used
+message S3Storage {
+	// Provider
+	S3Provider s3_provider = 1;
+	// Provider Class
+	string storage_class = 2;
+	// URL of provider
+	string endpoint_url = 3;
+	// Bucket Name
+	string bucket = 5;
+	// Region Name
+	string region = 6;
+	// Advanced Properties
+	repeated Advanced advanced = 7;
+	enum S3Provider {
+		NONE_S3Provider = 0;
+		AWS = 1;
+		AWSLocal = 2;
+		MINIO = 3;
+		OTHERS = 4;
+	}
+}
+
+// not used
+message Advanced {
+	string key = 1;
+	// Value of prop
+	oneof value {
+		// Value of prop
+		string string_value = 2;
+		// Value of prop
+		int64 int64_value = 3;
+		// Value of prop
+		uint64 uint64_value = 4;
+		// Value of prop
+		bool boolean_value = 5;
+	}
+}
+
+// ImageService service to store images
+service PatientImageService {
+
+	// UploadPatientImage Upload a image of patient
+	rpc UploadPatientImage(UploadPatientImageRequest) returns (UploadPatientImageResponse) {
+		option (google.api.http) = {
+			post: "/v1/patient/image/upload"
+			body: "*"
+		};
+	}
+
+	// ListPatientImages Get request for patients and his list of images
+	rpc ListPatientImages(ListPatientImagesRequest) returns (ListPatientImagesResponse) {
+		// go protobuf does not allow /v1/patient/{patient_id}images, hence using /v1/patient/images
+		option (google.api.http) = {
+      // "/v1/patient/{patient.id}/images" requests needs to be /v1/patient/images/list types rather /v1/patient/{patient.id}/images since body payload
+			post: "/v1/patient/image/list"
+			body: "*"
+		};
+	}
+
+	// GetPatientImage Get a specific image for a patient
+	// .This API is for future use and not implemented yet.
+	rpc GetPatientImage(RetrievePatientImageRequest) returns (Result) {
+		option (google.api.http) = {
+			post: "/v1/patient/{patient.id}/image/{image.id}"
+		};
+	}
+
+	// UpdatePatientImageTags Update tags for a patient's image
+	// .This API is for future use and not implemented yet.
+	rpc UpdatePatientImageTags(RetrievePatientImageRequestByTags) returns (Result) {
+		option (google.api.http) = {
+			patch: "/v1/patient/{patient.id}/image/{image.id}/tags"
+		};
+	}
+
+	// DeletePatientImage Delete a patient's image
+	// .This API is for future use and not implemented yet.
+	rpc DeletePatientImage(DeletePatientImageRequest) returns (Result) {
+		option (google.api.http) = {
+			delete: "/v1/patient/{patient.id}/image/{image.id}"
+		};
+	}
+
+	// RetrieveImagesByTag Retrieve images by tag
+	// .This API is for future use and not implemented yet.
+	rpc RetrieveImagesByTag(RetrievePatientImageRequestByTags) returns (Result) {
+		option (google.api.http) = {
+			post: "/v1/patient/{patient.id}/image/{image.id}/tags"
+		};
+	}
+
+	// RetrieveImagesByDateRange Retrieve images by date range for a patient
+	// // This API is for future use and not implemented yet.
+	//		rpc RetrieveImagesByDateRange (RetrievePatientImageRequest) returns (Result) {
+	//			option (google.api.http) = {
+	//				get: "/v1/patient/{patient.id}/images/date-range"
+	//			};
+	//		}
+}

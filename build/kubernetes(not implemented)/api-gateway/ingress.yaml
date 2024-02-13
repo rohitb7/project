@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sample-ingress
+  annotations:
+    kubernetes.io/ingress.class: "kong"
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /image-upload-app
+            pathType: Prefix
+            backend:
+              service:
+                name: image-upload-app
+                port:
+                  number: 8080

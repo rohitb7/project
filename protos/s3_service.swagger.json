@@ -1,0 +1,790 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "s3_service.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "PatientImageService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/patient/image/list": {
+      "post": {
+        "summary": "ListPatientImages Get request for patients and his list of images",
+        "operationId": "PatientImageService_ListPatientImages",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/s3_serviceListPatientImagesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/s3_serviceListPatientImagesRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PatientImageService"
+        ]
+      }
+    },
+    "/v1/patient/image/upload": {
+      "post": {
+        "summary": "UploadPatientImage Upload a image of patient",
+        "operationId": "PatientImageService_UploadPatientImage",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/s3_serviceUploadPatientImageResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/s3_serviceUploadPatientImageRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PatientImageService"
+        ]
+      }
+    },
+    "/v1/patient/{patient.id}/image/{image.id}": {
+      "delete": {
+        "summary": "DeletePatientImage Delete a patient's image\n.This API is for future use and not implemented yet.",
+        "operationId": "PatientImageService_DeletePatientImage",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/s3_serviceResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "patient.id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "image.id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "patient.name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "patient.userName",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "image.name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "image.description",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "image.tags",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "image.bucketPath",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "image.url",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "image.uploadTime",
+            "description": "Time when the image was uploaded",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "tags.tag",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "tags": [
+          "PatientImageService"
+        ]
+      },
+      "post": {
+        "summary": "GetPatientImage Get a specific image for a patient\n.This API is for future use and not implemented yet.",
+        "operationId": "PatientImageService_GetPatientImage",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/s3_serviceResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "patient.id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "image.id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "patient.name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "patient.userName",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "image.name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "image.description",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "image.tags",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "image.bucketPath",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "image.url",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "image.uploadTime",
+            "description": "Time when the image was uploaded",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          }
+        ],
+        "tags": [
+          "PatientImageService"
+        ]
+      }
+    },
+    "/v1/patient/{patient.id}/image/{image.id}/tags": {
+      "post": {
+        "summary": "RetrieveImagesByTag Retrieve images by tag\n.This API is for future use and not implemented yet.",
+        "operationId": "PatientImageService_RetrieveImagesByTag",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/s3_serviceResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "patient.id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "image.id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "patient.name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "patient.userName",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "image.name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "image.description",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "image.tags",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "image.bucketPath",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "image.url",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "image.uploadTime",
+            "description": "Time when the image was uploaded",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "tags.tag",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "tags": [
+          "PatientImageService"
+        ]
+      },
+      "patch": {
+        "summary": "UpdatePatientImageTags Update tags for a patient's image\n.This API is for future use and not implemented yet.",
+        "operationId": "PatientImageService_UpdatePatientImageTags",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/s3_serviceResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "patient.id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "image.id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "patient.name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "patient.userName",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "image.name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "image.description",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "image.tags",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "image.bucketPath",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "image.url",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "image.uploadTime",
+            "description": "Time when the image was uploaded",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "tags.tag",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "tags": [
+          "PatientImageService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "s3_serviceComparisonOperator": {
+      "type": "string",
+      "enum": [
+        "COMPARISON_UNKNOWN",
+        "CONTAINS",
+        "ICONTAINS",
+        "EQUAL",
+        "LESS_THAN",
+        "LESS_THAN_OR_EQUAL",
+        "GREATER_THAN",
+        "GREATER_THAN_OR_EQUAL"
+      ],
+      "default": "COMPARISON_UNKNOWN",
+      "title": "- ICONTAINS: STRING contains.Case Insensitive. May not be supported for all data types"
+    },
+    "s3_serviceError": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "errorRetryStatus": {
+          "$ref": "#/definitions/s3_serviceErrorRetryStatus"
+        }
+      },
+      "title": "Error  global error object for api'sresponse"
+    },
+    "s3_serviceErrorRetryStatus": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "RETRY",
+        "NO_RETRY",
+        "WAIT_AND_RETRY"
+      ],
+      "default": "NONE",
+      "title": "- NONE: none so user to decide to take further action\n - RETRY: Request can be re-tried\n - NO_RETRY: Request cannot be re-tried\n - WAIT_AND_RETRY: Wait and retry Request"
+    },
+    "s3_serviceFilterKeyValue": {
+      "type": "object",
+      "properties": {
+        "comparisonOperator": {
+          "$ref": "#/definitions/s3_serviceComparisonOperator"
+        }
+      }
+    },
+    "s3_serviceFilterKeyValueSet": {
+      "type": "object",
+      "properties": {
+        "tags": {
+          "$ref": "#/definitions/s3_serviceTags"
+        },
+        "filterFields": {
+          "$ref": "#/definitions/s3_serviceFilterKeyValue"
+        },
+        "logicalOperator": {
+          "$ref": "#/definitions/s3_serviceLogicalOperator"
+        },
+        "sortOperator": {
+          "$ref": "#/definitions/s3_serviceSortOperator"
+        }
+      }
+    },
+    "s3_serviceImage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "bucketPath": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "uploadTime": {
+          "type": "string",
+          "format": "date-time",
+          "title": "Time when the image was uploaded"
+        }
+      },
+      "title": "ideally should be in a different proto"
+    },
+    "s3_serviceImageUI": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "s3_serviceListPatientImagesRequest": {
+      "type": "object",
+      "properties": {
+        "patient": {
+          "$ref": "#/definitions/s3_servicePatient"
+        },
+        "queryOption": {
+          "$ref": "#/definitions/s3_serviceQueryOptions"
+        }
+      },
+      "title": "RetrievePatientImageRequest - Search the blobs stored by tags"
+    },
+    "s3_serviceListPatientImagesResponse": {
+      "type": "object",
+      "properties": {
+        "patient": {
+          "$ref": "#/definitions/s3_servicePatient"
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/s3_serviceImage"
+          }
+        },
+        "result": {
+          "$ref": "#/definitions/s3_serviceResult"
+        }
+      },
+      "title": "SearchPatientImageResponse - Search response matching catalog attributes"
+    },
+    "s3_serviceLogicalOperator": {
+      "type": "string",
+      "enum": [
+        "AND",
+        "OR"
+      ],
+      "default": "AND"
+    },
+    "s3_servicePagination": {
+      "type": "object",
+      "properties": {
+        "pageToken": {
+          "type": "string",
+          "title": "Page token to echo back to get next page, is empty or page token is empty,\nthen there is no more results"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int64",
+          "title": "page_size"
+        }
+      }
+    },
+    "s3_servicePatient": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "userName": {
+          "type": "string"
+        }
+      }
+    },
+    "s3_servicePatientImage": {
+      "type": "object",
+      "properties": {
+        "patient": {
+          "$ref": "#/definitions/s3_servicePatientUI"
+        },
+        "image": {
+          "$ref": "#/definitions/s3_serviceImageUI"
+        }
+      }
+    },
+    "s3_servicePatientUI": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "s3_serviceQueryOptions": {
+      "type": "object",
+      "properties": {
+        "filters": {
+          "$ref": "#/definitions/s3_serviceFilterKeyValueSet"
+        },
+        "pagination": {
+          "$ref": "#/definitions/s3_servicePagination"
+        }
+      }
+    },
+    "s3_serviceRequestResult": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN_RESULT",
+        "REJECTED",
+        "ACCEPTED"
+      ],
+      "default": "UNKNOWN_RESULT",
+      "title": "- REJECTED: Request has been rejected\n - ACCEPTED: Request has been accepted for processing"
+    },
+    "s3_serviceResult": {
+      "type": "object",
+      "properties": {
+        "requestResult": {
+          "$ref": "#/definitions/s3_serviceRequestResult"
+        },
+        "error": {
+          "$ref": "#/definitions/s3_serviceError",
+          "description": "Message is a textual description of reason for rejection, and can be safely passed on to operator through logs\nor UI."
+        }
+      }
+    },
+    "s3_serviceSortOperator": {
+      "type": "string",
+      "enum": [
+        "DEFAULT",
+        "ASCENDING",
+        "DESCENDING"
+      ],
+      "default": "DEFAULT"
+    },
+    "s3_serviceTags": {
+      "type": "object",
+      "properties": {
+        "tag": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "s3_serviceUploadPatientImageRequest": {
+      "type": "object",
+      "properties": {
+        "patientImage": {
+          "$ref": "#/definitions/s3_servicePatientImage"
+        },
+        "tags": {
+          "$ref": "#/definitions/s3_serviceTags"
+        },
+        "content": {
+          "type": "string",
+          "format": "byte",
+          "title": "The image file content, sent as bytes"
+        },
+        "filename": {
+          "type": "string"
+        },
+        "contentType": {
+          "type": "string",
+          "title": "Additional metadata if necessary, like content type"
+        }
+      },
+      "title": "CreateOrUpdateBlobRequest - Create or Update a blob in remote storage"
+    },
+    "s3_serviceUploadPatientImageResponse": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "$ref": "#/definitions/s3_serviceResult"
+        }
+      },
+      "title": "CreateOrUpdateBlobResponse Async job id that needs to tracked for success or failure"
+    }
+  }
+}
