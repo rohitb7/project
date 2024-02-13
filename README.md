@@ -69,14 +69,14 @@ NOTE. introduces complexities in error handling that can be further addressed.
 
 ##  Current databsae schema
 
-![Screenshot 2024-02-13 at 10.30.29 AM.png](..%2F..%2F..%2F..%2Fvar%2Ffolders%2Fxk%2Fnzbhh1590qngs752x7tjhmxc0000gn%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_bUO7cM%2FScreenshot%202024-02-13%20at%2010.30.29%E2%80%AFAM.png)
+![Link](./schema.png)
 
 ##  Current endpoints
 Using GRPC gateway as seen in the diagram using grpc-gateway so we can expose our ports as REST and on grpc for internode service communication
 drawback is error handling is not smooth, needs some extra work there.
 
+![Link](./grpc-gateway.png)
 
-![Screenshot 2024-02-13 at 10.30.51 AM.png](..%2F..%2F..%2F..%2Fvar%2Ffolders%2Fxk%2Fnzbhh1590qngs752x7tjhmxc0000gn%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_P0BEjL%2FScreenshot%202024-02-13%20at%2010.30.51%E2%80%AFAM.png)
 
 ##  Alternate consideration
 AWS Cloud Development Kit (AWS CDK), AWS Lambda, DynamoDB, and S3.
