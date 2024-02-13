@@ -84,7 +84,7 @@ AWS Cloud Development Kit (AWS CDK), AWS Lambda, DynamoDB, and S3.
 
 # Endpoints
 Please check the Swagger s3_service.swagger.json  and the s3_service.proto file.
-[Link to the swagger file]('./protos/s3_service.swagger.json')
+[Link to the swagger file]('https://github.com/rohitb7/project/blob/main/protos/s3_service.swagger.json')
 
 
 # Asynchronous operations
@@ -152,4 +152,4 @@ Health checks <br />
 Searching. No search implemented currently in any api. <br />
 Also enhance the blob-service for more features. AWS sdk helps in that. It can be a service for other services. <br />
 
-And all the above mentioned
+Also all the above mentioned earlier.
