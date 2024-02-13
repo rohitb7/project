@@ -59,33 +59,33 @@ NOTE. introduces complexities in error handling that can be further addressed.
 ## Future Directions
 
 - **Blob Service Independence**: Blob service can evolve into a standalone entity, equipped with its own database (I can think of nosql right now)
- This move aims to increase the system's modularity and capacity for handling diverse file types.
+  This move aims to increase the system's modularity and capacity for handling diverse file types.
 
 - **Database Evolution**: Transitioning to a NoSQL database model for blobs would be better to accommodate
-the nuanced requirements of file metadata and tagging, offering a more adaptable framework for data management.
+  the nuanced requirements of file metadata and tagging, offering a more adaptable framework for data management.
 
 - **GRPC Gateway Refinement**: Efforts to streamline the GRPC gateway's error handling processes.
- Further work is need right now especially for error handling scenario.
+  Further work is need right now especially for error handling scenario.
 
 ##  Current databsae schema
-![Screenshot 2024-02-12 at 11.31.46 AM.png](..%2F..%2F..%2F..%2Fvar%2Ffolders%2Fxk%2Fnzbhh1590qngs752x7tjhmxc0000gn%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_BxkVV7%2FScreenshot%202024-02-12%20at%2011.31.46%E2%80%AFAM.png)
 
+![Screenshot 2024-02-13 at 10.30.29 AM.png](..%2F..%2F..%2F..%2Fvar%2Ffolders%2Fxk%2Fnzbhh1590qngs752x7tjhmxc0000gn%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_bUO7cM%2FScreenshot%202024-02-13%20at%2010.30.29%E2%80%AFAM.png)
 
 ##  Current endpoints
 Using GRPC gateway as seen in the diagram using grpc-gateway so we can expose our ports as REST and on grpc for internode service communication
 drawback is error handling is not smooth, needs some extra work there.
 
-![Screenshot 2024-02-12 at 11.38.31 AM.png](..%2F..%2F..%2F..%2Fvar%2Ffolders%2Fxk%2Fnzbhh1590qngs752x7tjhmxc0000gn%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_P4x4M3%2FScreenshot%202024-02-12%20at%2011.38.31%E2%80%AFAM.png)
 
+![Screenshot 2024-02-13 at 10.30.51 AM.png](..%2F..%2F..%2F..%2Fvar%2Ffolders%2Fxk%2Fnzbhh1590qngs752x7tjhmxc0000gn%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_P0BEjL%2FScreenshot%202024-02-13%20at%2010.30.51%E2%80%AFAM.png)
 
 ##  Alternate consideration
 AWS Cloud Development Kit (AWS CDK), AWS Lambda, DynamoDB, and S3.
 
 
-
-##  Check usage
-
+# Endpoints
 Please check the Swagger s3_service.swagger.json  and the s3_service.proto file.
+[Link to the swagger file]('./protos/s3_service.swagger.json')
+
 
 # Asynchronous operations
 For asynchronous operations, there's an async_runner (check async_runner file).
@@ -97,20 +97,6 @@ instead of being delegated to MinIO/S3. However, essential file processing, such
 
 # Synchronous operations
 File downloads occur synchronously using a presigned URL.
-
-# Endpoints
-
-![Screenshot 2024-02-12 at 1.27.42 PM.png](..%2F..%2F..%2F..%2Fvar%2Ffolders%2Fxk%2Fnzbhh1590qngs752x7tjhmxc0000gn%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_z4SfBJ%2FScreenshot%202024-02-12%20at%201.27.42%E2%80%AFPM.png)
-<br />
-![Screenshot 2024-02-12 at 1.27.55 PM.png](..%2F..%2F..%2F..%2Fvar%2Ffolders%2Fxk%2Fnzbhh1590qngs752x7tjhmxc0000gn%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_FGRUVA%2FScreenshot%202024-02-12%20at%201.27.55%E2%80%AFPM.png)
-<br />
-![Screenshot 2024-02-12 at 1.28.12 PM.png](..%2F..%2F..%2F..%2Fvar%2Ffolders%2Fxk%2Fnzbhh1590qngs752x7tjhmxc0000gn%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_L976lb%2FScreenshot%202024-02-12%20at%201.28.12%E2%80%AFPM.png)
-<br />
-![Screenshot 2024-02-12 at 1.28.23 PM.png](..%2F..%2F..%2F..%2Fvar%2Ffolders%2Fxk%2Fnzbhh1590qngs752x7tjhmxc0000gn%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_UZoSE5%2FScreenshot%202024-02-12%20at%201.28.23%E2%80%AFPM.png)
-<br />
-![Screenshot 2024-02-12 at 1.28.35 PM.png](..%2F..%2F..%2F..%2Fvar%2Ffolders%2Fxk%2Fnzbhh1590qngs752x7tjhmxc0000gn%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_k4TLtK%2FScreenshot%202024-02-12%20at%201.28.35%E2%80%AFPM.png)
-<br />
-![Screenshot 2024-02-12 at 1.28.56 PM.png](..%2F..%2F..%2F..%2Fvar%2Ffolders%2Fxk%2Fnzbhh1590qngs752x7tjhmxc0000gn%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_HqrF06%2FScreenshot%202024-02-12%20at%201.28.56%E2%80%AFPM.png)
 
 
 # ---------------------------------------------
@@ -134,6 +120,7 @@ Any sql would do,I have familiarity with postgres
 ##  If you had another week of prototyping time, what functionality would you want to add?
 As discussed above separate the patient-service and make patient-service and blob service
 
+ideally....  <br />
 patient-service =>  mysql for patients  <br />
 blob-service =>  nosql for file metadata + s3
 
@@ -148,9 +135,9 @@ Meta monitor / prometheus counters  <br />
 Redis?? couple if cases I have (not implemented) where redis can play a huge role  <br />
 Jobs table in db, which will store each jobs status (wrote code see job_manger but does not store in db)  <br />
 Events table in db. which will store progress events (wrote code but does not store in db)  <br />
-IAM, aws keys storage consideration  <br />
+IAM, aws keys storage consideration <br />
 DB indexes  <br />
-Setup a NATS client and test <br />
+Setup a NATS client and test<br />
 Logs in elastic logstash  <br />
 UI for all above  <br />
 
