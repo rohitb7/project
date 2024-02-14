@@ -13,8 +13,7 @@
 - **Prometheus**: Initially considered for system monitoring but currently not in use.
 
 
-
-
+NOTE: the script runs docker prune: comment if you have docker images in use
 
 _the below scripts adds default data to minio and postgres_
 
@@ -48,6 +47,10 @@ chmod +x ./bin/patient_service <br />
 for got Frontend directory <br />
 npm i <br />
 npm run start <br />
+should be running on port 3000
+
+
+
 
 **Minio
 http://localhost:9001/browser/mybucket
@@ -90,6 +93,12 @@ NOTE. introduces complexities in error handling that can be further addressed.
 - **GRPC Gateway Refinement**: Efforts to streamline the GRPC gateway's error handling processes.
   Further work is need right now especially for error handling scenario.
 
+##  Current Architecture
+
+![Link](./arch.png)
+
+
+
 ##  Current databsae schema
 
 ![Link](./schema.png)
@@ -121,12 +130,9 @@ instead of being delegated to MinIO/S3.
 However, essential file processing, such as data extraction using worker nodes, is a popular use case.
 Depends upon the use case!
 
-Task Manager, Worker pool, Workers, JobManager
-
+Working ofTask Manager, Worker pool, Workers, JobManager
 
 The system operates as follows:
-
-Task Manager Setup:
 
 Upon initialization, the Task Manager is configured with a pool of worker channels (workerPool) and a task queue (taskQueue) to manage tasks.
 It starts with a specified number of workers (maxWorker) and a name for identification.
