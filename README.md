@@ -44,6 +44,11 @@ chmod +x ./bin/patient_service <br />
 ./bin/patient_service -dev <br />
 
 
+** For UI
+for got Frontend directory <br />
+npm i <br />
+npm run start <br />
+
 
 
 ## Current Setup: Patient-Service

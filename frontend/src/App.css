@@ -1,0 +1,56 @@
+body {
+  height: 100vh;
+  width: 100%;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.image-detail-container {
+  width: 70%;
+  overflow: scroll;
+  padding: 20px;
+}
+
+.list {
+  border: 1px solid grey;
+  margin-top: 30px;
+  padding: 20px;
+}
+
+.list-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.display-container {
+  height: 100%;
+  width: 30%;
+  display: flex;
+  justify-content: center;
+}
+
+.search-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.image {
+  height: 400px;
+  width: 400px;
+}
+
+.welcome-header {
+  width: 500px;
+  margin: auto;
+}
+
+.upload {
+  margin-top: 20px;
+}

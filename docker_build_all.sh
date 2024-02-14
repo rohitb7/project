@@ -16,8 +16,8 @@ echo "Starting up services..."
 docker-compose up -d
 
 # Give services time to start
-echo "Waiting for services to start...3 mins ..keep 'enter'ing terminal to not die :) "
-sleep 180  # Adjust sleep duration as necessary
+echo "Waiting for services to start...2 mins ..keep 'enter'ing terminal to not die :) "
+sleep 120  # Adjust sleep duration as necessary
 
 # Step 4: Initialize PostgreSQL database
 echo "Initializing PostgreSQL database..."
