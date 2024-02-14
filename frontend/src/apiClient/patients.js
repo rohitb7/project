@@ -52,31 +52,28 @@ export const uploadFile = async (selectedFile, fileName, contentType) => {
 
 	console.log("formData", formData.get(fileName));
 
-	const payload = 	{
-		patientImage: {
-			patientId: "1",
-			image: {
-				name: string,
-				description: "string",
-				tags: [
+	const payload = {
+		"patientImage": {
+			"patientId": "1",
+			"image": {
+				"name": "string",
+				"description": "string",
+				"tags": [
 					"tag1"
 				]
 			}
 		},
-		tags: {
-			tag: []
+		"tags": {
+			"tag": []
 		},
-		filePath: ""
-	}
+		"filePath": ""
+	};
 
-	formData.append("payload", payload)
+	formData.append("payload", JSON.stringify(payload)); // Convert payload to string
 
 	try {
 		const response = await fetch(url, {
 			method: "POST",
-			headers: {
-				// "Content-Type": "multipart/form-data",
-			},
 			body: formData,
 		});
 		if (!response.ok) {
@@ -85,6 +82,6 @@ export const uploadFile = async (selectedFile, fileName, contentType) => {
 		const data = await response.json();
 		console.log("Success:", data);
 	} catch (error) {
-		console.error("Error:", error);
+
 	}
 };

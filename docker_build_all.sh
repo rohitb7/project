@@ -16,8 +16,8 @@ echo "Starting up services..."
 docker-compose up -d
 
 # Give services time to start
-echo "Waiting for services to start...3 mins ..keep 'enter'ing terminal to not die :) "
-sleep 200  # Adjust sleep duration as necessary
+echo "Waiting for services to start...1 min "
+sleep 60  # Adjust sleep duration as necessary
 
 # Step 4: Initialize PostgreSQL database
 echo "Initializing PostgreSQL database..."
@@ -47,7 +47,7 @@ fi
 # Define local directory and bucket name
 local_directory="./temperory-list-of-images"  # Adjust based on actual directory path
 bucket_name="mybucket"
-temp_container_dir="/tmp/minio_upload"
+temp_container_dir="/var/tmp/uploads"
 
 # Create temporary directory in MinIO container
 docker exec $minio_container mkdir -p $temp_container_dir
@@ -56,14 +56,26 @@ docker exec $minio_container mkdir -p $temp_container_dir
 docker cp $local_directory/. $minio_container:$temp_container_dir
 
 # Configure mc with the MinIO server (replace YOUR_ACCESS_KEY and YOUR_SECRET_KEY with actual values)
+#docker exec $minio_container /bin/sh -c "\
+#    mc alias set myminio http://localhost:9000 minioadmin minioadmin && \
+#    mc mb myminio/$bucket_name --ignore-existing && \
+#    mc cp $temp_container_dir/* myminio/$bucket_name/"
+
+# Copy policy.json file to the MinIO container
+docker cp ./policy.json $minio_container:/var/log/policy.json
+
 docker exec $minio_container /bin/sh -c "\
     mc alias set myminio http://localhost:9000 minioadmin minioadmin && \
+    mc admin policy create myminio full-access /var/log/policy.json && \
+    mc admin user add myminio minioadmin minioadmin && \
+    mc admin policy attach myminio full-access user=minioadmin && \
     mc mb myminio/$bucket_name --ignore-existing && \
+    mc policy set public myminio/$bucket_name && \
     mc cp $temp_container_dir/* myminio/$bucket_name/"
 
 # Note: The `--ignore-existing` flag for `mc mb` command avoids error if the bucket already exists.
 
 # Optional: Cleanup temporary directory in MinIO container
-docker exec $minio_container /bin/sh -c "rm -rf $temp_container_dir"
+#docker exec $minio_container /bin/sh -c "rm -rf $temp_container_dir"
 
 echo "Script completed successfully."

@@ -10,6 +10,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"math"
 	"os"
+	"path/filepath"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -18,6 +19,11 @@ import (
 	"www.rvb.com/commonutils"
 )
 
+// ExtractFilename extracts the filename from a given path
+func ExtractFilename(path string) string {
+	return filepath.Base(path)
+}
+
 // PutBlob // generic upload
 func PutBlob(sourcePath string, blobCtx core.BlobContext, ctx context.Context, opResponse chan core.StorageManagerOperationEvent, progressResponse chan core.StorageManagerProgressEvent) error {
 	s3Man := getS3ManagerMain()
@@ -25,11 +31,13 @@ func PutBlob(sourcePath string, blobCtx core.BlobContext, ctx context.Context, o
 
 	bucket := blobCtx.HierarchyIdentifier.Bucket
 
+	remotePathKey := ExtractFilename(blobCtx.RemotePathKey)
+
 	f := log.Fields{
 		"S3Provider":    s3Man.S3Option.Config.S3Provider,
 		"Endpoint":      s3Man.S3Option.Config.URL,
 		"sourcePath":    sourcePath,
-		"remotePathKey": blobCtx.RemotePathKey,
+		"remotePathKey": remotePathKey,
 		"Bucket":        bucket,
 		"Context":       ctx,
 	}
@@ -101,7 +109,7 @@ func PutBlob(sourcePath string, blobCtx core.BlobContext, ctx context.Context, o
 
 	input := &s3.PutObjectInput{
 		Bucket:       aws.String(bucket),
-		Key:          aws.String(blobCtx.RemotePathKey),
+		Key:          aws.String(remotePathKey),
 		Body:         reader,
 		Metadata:     metaData,
 		StorageClass: types.StorageClass(strings.ToUpper(s3Man.S3ManagerConfig.S3StorageClass)),

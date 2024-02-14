@@ -49,6 +49,8 @@ for got Frontend directory <br />
 npm i <br />
 npm run start <br />
 
+**Minio
+http://localhost:9001/browser/mybucket
 
 
 ## Current Setup: Patient-Service
