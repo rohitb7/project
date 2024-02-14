@@ -124,7 +124,7 @@ AWS Cloud Development Kit (AWS CDK), AWS Lambda, DynamoDB, and S3.
 
 
 # Endpoints
-Please check the Swagger s3_service.swagger.json  and the s3_service.proto file.
+Please check the Swagger s3_service.swagger.json and the s3_service.proto file in protos directory.
 [Link to the swagger file]('https://github.com/rohitb7/project/blob/main/protos/s3_service.swagger.json')
 
 
