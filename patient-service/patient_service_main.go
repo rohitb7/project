@@ -1,11 +1,14 @@
 package main
 
 import (
+	"flag"
 	"github.com/dlintw/goconf"
 	log "github.com/sirupsen/logrus"
 	"time"
 	"www.rvb.com/blob-service/s3-manager"
 )
+
+var devEnv bool
 
 const (
 	DefaultMaxRetry              = 1
@@ -19,14 +22,23 @@ const (
 )
 
 func main() {
-	//// Get the current working directory
-	//currentDir, err := os.Getwd()
-	//if err != nil {
-	//	log.Fatalf("Failed to get the current working directory: %v", err)
-	//}
-	//fmt.Println("Current directory:", currentDir)
 
-	configFile := "./patient_image_service.conf"
+	// Define flags
+	dev := flag.Bool("dev", false, "Use development configuration file")
+	flag.Parse()
+
+	devEnv = *dev
+
+	var configFile string
+
+	// Use development configuration file if specified, otherwise use Docker configuration file
+	if *dev {
+		log.Info("running on dev env")
+		configFile = "./patient_image_service_dev.conf"
+	} else {
+		log.Info("running on docker env")
+		configFile = "./patient_image_service_docker.conf"
+	}
 
 	c, err := goconf.ReadConfigFile(configFile)
 	if err != nil {

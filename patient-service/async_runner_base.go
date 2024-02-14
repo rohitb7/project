@@ -41,12 +41,12 @@ func (r *asyncRunnerBase) GetCancelContext() context.Context {
 	return r.Context
 }
 
+// handleCompleteJob remove the jobmanager
 func handleCompleteJob(r AsyncRunner, jobError error) {
 	var err error
 	if jobError != nil {
 		log.WithFields(log.Fields{"error": jobError, "job_id": r.GetJobId(), "job_type": r.GetJobType()}).Error("job failed")
 	}
-
 	if err == nil {
 		log.WithFields(log.Fields{"job_id": r.GetJobId(), "job_type": r.GetJobType()}).Info("Completed DssManagerJob")
 	}

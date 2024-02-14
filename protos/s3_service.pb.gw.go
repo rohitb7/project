@@ -457,7 +457,7 @@ func RegisterPatientImageServiceHandlerServer(ctx context.Context, mux *runtime.
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/s3_service.PatientImageService/UploadPatientImage", runtime.WithHTTPPathPattern("/v1/patient/image/upload"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/s3_service.PatientImageService/UploadPatientImage", runtime.WithHTTPPathPattern("/v1/patient/images/upload"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -482,7 +482,7 @@ func RegisterPatientImageServiceHandlerServer(ctx context.Context, mux *runtime.
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/s3_service.PatientImageService/ListPatientImages", runtime.WithHTTPPathPattern("/v1/patient/image/list"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/s3_service.PatientImageService/ListPatientImages", runtime.WithHTTPPathPattern("/v1/patient/images/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -646,7 +646,7 @@ func RegisterPatientImageServiceHandlerClient(ctx context.Context, mux *runtime.
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/s3_service.PatientImageService/UploadPatientImage", runtime.WithHTTPPathPattern("/v1/patient/image/upload"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/s3_service.PatientImageService/UploadPatientImage", runtime.WithHTTPPathPattern("/v1/patient/images/upload"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -668,7 +668,7 @@ func RegisterPatientImageServiceHandlerClient(ctx context.Context, mux *runtime.
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/s3_service.PatientImageService/ListPatientImages", runtime.WithHTTPPathPattern("/v1/patient/image/list"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/s3_service.PatientImageService/ListPatientImages", runtime.WithHTTPPathPattern("/v1/patient/images/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -776,9 +776,9 @@ func RegisterPatientImageServiceHandlerClient(ctx context.Context, mux *runtime.
 }
 
 var (
-	pattern_PatientImageService_UploadPatientImage_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"v1", "patient", "image", "upload"}, ""))
+	pattern_PatientImageService_UploadPatientImage_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"v1", "patient", "images", "upload"}, ""))
 
-	pattern_PatientImageService_ListPatientImages_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"v1", "patient", "image", "list"}, ""))
+	pattern_PatientImageService_ListPatientImages_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"v1", "patient", "images", "list"}, ""))
 
 	pattern_PatientImageService_GetPatientImage_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"v1", "patient", "patient.id", "image", "image.id"}, ""))
 

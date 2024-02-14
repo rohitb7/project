@@ -24,15 +24,9 @@ func (r *UploadImageImpl) GetRunnerInput() proto.Message {
 func (r *UploadImageImpl) Run() error {
 
 	// this is a async job. which as an acknowledgement create a job id and returns to the client as soon as a job starts. the client can poll or ping for its status later.
-	// file upload can block the UI
+	// since file upload can block the UI
 	var jobError error
 
-	//start := time.Now()
-
-	defer func() {
-		//latency := time.Since(start).Seconds()
-		//metamonitor.DSSCW_META_MONITOR.GetJobLatencyVector().WithLabelValues(protos.JobType_UPLOAD_IMAGE.String()).Observe(latency)
-	}()
 	defer func() {
 		if jobError != nil {
 			//remove the job from the queue and set status db error
@@ -48,14 +42,6 @@ func (r *UploadImageImpl) Run() error {
 	protoRequest, ok := r.GetRunnerInput().(*protos.UploadPatientImageRequest)
 	if !ok {
 		return fmt.Errorf("failed to cast %+v", r.GetRunnerInput())
-	}
-
-	fileName := protoRequest.Filename
-	tempFilePath := serverCfg.uploadsLocation + fileName
-
-	if jobError = commonutils.WriteBytesToFile(tempFilePath, protoRequest.GetContent()); jobError != nil {
-		log.WithFields(log.Fields{"error": jobError.Error()}).Error("Failed to write file")
-		return jobError
 	}
 
 	// TODO: Filesize limit check. if large file then the storage service needs to make multipart upload
@@ -108,11 +94,12 @@ func (r *UploadImageImpl) Run() error {
 			}
 		}
 	}()
+
 	go func() {
 		// spin another thread for actual file transfer // serverCfg.storageManagerInterface can be a seen as a blob service which manges CRUD operations with S3
 		log.Info("transferring file to remote storage")
-		serverCfg.storageManagerInterface.PutBlob(tempFilePath, core.BlobContext{
-			RemotePathKey: fileName,
+		serverCfg.storageManagerInterface.PutBlob(protoRequest.FilePath, core.BlobContext{
+			RemotePathKey: protoRequest.FilePath,
 			HierarchyIdentifier: core.HierarchyIdentifier{
 				Bucket: s3Cfg.bucket,
 			},
@@ -121,8 +108,8 @@ func (r *UploadImageImpl) Run() error {
 	wg.Wait()
 
 	if jobError == nil {
-		go commonutils.DeleteFile(tempFilePath)
-		response, err := uploadPatientImageHandlerDB(protoRequest, fileName)
+		go commonutils.DeleteFile(protoRequest.FilePath)
+		response, err := uploadPatientImageHandlerDB(protoRequest, protoRequest.FilePath)
 		if err != nil {
 			return nil
 		}

@@ -74,7 +74,7 @@ RUN go mod tidy && go mod vendor
 
 # Build the patient-service Go application ..wrong location..needs to change
 
-RUN GOOS=linux GOARCH=amd64 go build -o ./project/bin/patient_service_binary .
+RUN GOOS=linux GOARCH=amd64 go build -tags="docker" -ldflags="-X main.version=value" -o ./project/bin/patient_service_binary .
 
 # The final command to run your application
 CMD ["./project/bin/patient_service_binary"]

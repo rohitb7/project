@@ -54,6 +54,7 @@ func (jm *JobManager) CancelJob(jobId string) bool {
 	return <-jm.cancelJobs
 }
 
+// RegisterJob regsiter a job in the JobManager context
 func (jm *JobManager) RegisterJob(jobId string, t workerpool.Task, ctx context.CancelFunc, workPoolType *workerpool.TaskManager) {
 	job := Job{
 		jobId:        jobId,
@@ -65,6 +66,7 @@ func (jm *JobManager) RegisterJob(jobId string, t workerpool.Task, ctx context.C
 	jm.jobs <- job
 }
 
+// RemoveJob
 func (jm *JobManager) RemoveJob(jobId string) {
 	job := Job{
 		jobId:   jobId,
@@ -73,6 +75,7 @@ func (jm *JobManager) RemoveJob(jobId string) {
 	jm.jobs <- job
 }
 
+// start the job manager,a go routine which looks out for any incoming jobs.
 func (jm *JobManager) Start() {
 
 	go func() {
@@ -96,7 +99,7 @@ func (jm *JobManager) Start() {
 					log.Info(log.Fields{"job_id": job.jobId}, "Registered Job")
 					jm.jobLock.Lock()
 					jm.jobContext[job.jobId] = job.ctx
-					job.workPoolType.SubmitTask(job.task)
+					job.workPoolType.SubmitTask(job.task) //submit the job to a
 					jm.jobLock.Unlock()
 
 				case CancelJob:
@@ -118,10 +121,9 @@ func (jm *JobManager) Start() {
 			}
 		}
 	}()
-
 }
 
-// not used...Global instance.. cannot start channel when stopped
+// not used...pause job needed?
 func (jm *JobManager) Stop() {
 	go func() {
 		jm.quit <- true

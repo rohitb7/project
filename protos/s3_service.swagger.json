@@ -16,7 +16,7 @@
     "application/json"
   ],
   "paths": {
-    "/v1/patient/image/list": {
+    "/v1/patient/images/list": {
       "post": {
         "summary": "ListPatientImages Get request for patients and his list of images",
         "operationId": "PatientImageService_ListPatientImages",
@@ -49,7 +49,7 @@
         ]
       }
     },
-    "/v1/patient/image/upload": {
+    "/v1/patient/images/upload": {
       "post": {
         "summary": "UploadPatientImage Upload a image of patient",
         "operationId": "PatientImageService_UploadPatientImage",
@@ -684,19 +684,11 @@
     "s3_servicePatientImage": {
       "type": "object",
       "properties": {
-        "patient": {
-          "$ref": "#/definitions/s3_servicePatientUI"
+        "patientId": {
+          "type": "string"
         },
         "image": {
           "$ref": "#/definitions/s3_serviceImageUI"
-        }
-      }
-    },
-    "s3_servicePatientUI": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
         }
       }
     },
@@ -762,17 +754,8 @@
         "tags": {
           "$ref": "#/definitions/s3_serviceTags"
         },
-        "content": {
-          "type": "string",
-          "format": "byte",
-          "title": "The image file content, sent as bytes"
-        },
-        "filename": {
+        "filePath": {
           "type": "string"
-        },
-        "contentType": {
-          "type": "string",
-          "title": "Additional metadata if necessary, like content type"
         }
       },
       "title": "CreateOrUpdateBlobRequest - Create or Update a blob in remote storage"

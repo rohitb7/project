@@ -12,6 +12,7 @@ import (
 	"net"
 	"net/http"
 	"runtime"
+	"strings"
 	"sync"
 	"time"
 	"www.rvb.com/blob-service/core"
@@ -310,12 +311,17 @@ func (sqlDBConfig *SqldbConfiguration) configure(section string, c *goconf.Confi
 		log.WithFields(log.Fields{"error": err}).Error("missing or invalid server configuration")
 		return errors.New("missing or invalid server configuration")
 	}
-	//COMMENT FOR LOCAL DEVELOPMENT
-	//sqlDBConfig.Port, err = c.GetInt(section, "port")
-	//if err != nil {
-	//	log.WithFields(log.Fields{"error": err}).Error("missing or invalid server configuration")
-	//	return errors.New("missing or invalid server configuration")
-	//}
+
+	//TODO: remove mode from the conf's
+	if devEnv {
+		//UN COMMENT FOR LOCAL DEVELOPMENT
+		sqlDBConfig.Port, err = c.GetInt(section, "port")
+		if err != nil {
+			log.WithFields(log.Fields{"error": err}).Error("missing or invalid server configuration")
+			return errors.New("missing or invalid server configuration")
+		}
+	}
+
 	sqlDBConfig.Username, err = c.GetString(section, "username")
 	if err != nil {
 		log.WithFields(log.Fields{"error": err}).Error("missing or invalid server configuration")
@@ -526,35 +532,35 @@ func startRESTServer(rgc *RestGrpcConfiguration) (err error) {
 
 	// Listen and Serve http
 	if err == nil {
-		//httpMux.Handle("/", gwMux)
 		// Register the gRPC gateway with CORS middleware and set Referrer-Policy header
+
+		///v1/patient/images/upload
 		httpMux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-			// TODO
-			// Set Referrer-Policy header
+			// TODO: FIX
 			w.Header().Set("Referrer-Policy", "*")
 			w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
 			w.Header().Set("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, HEAD, OPTIONS")
 			w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, Authorization, ResponseType")
 			w.Header().Set("Access-Control-Allow-Headers", "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Transfer-Encoding,Custom-Header-1,X-Accept-Content-Transfer-Encoding,X-Accept-Response-Streaming,X-User-Agent,X-Grpc-Web")
 
-			//w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, ResponseType, multipart/form-data, application/x-www-form-urlencoded")
-			//w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
-			//w.Header().Set("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, HEAD, OPTIONS")
-			//// Added 'multipart/form-data' and 'application/x-www-form-urlencoded' to the list
-			//w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, ResponseType, multipart/form-data, application/x-www-form-urlencoded")
-			////If you want to allow cookies/cross-origin requests, include 'Access-Control-Allow-Credentials'
-			//w.Header().Set("Access-Control-Allow-Credentials", "true")
-
 			log.Info("r.Method ....", r.Method)
-			log.Info("r.Header ....", r.Header)
 			log.Info("r.URL ....", r.URL)
 
-			//Handle preflight requests
+			// Handle preflight requests
 			if r.Method == "OPTIONS" {
 				w.WriteHeader(http.StatusOK)
 				return
 			}
-			// Serve CORS-enabled gRPC gateway
+
+			log.Info("*********ACCEPTED*********")
+
+			// Check if the URL starts with "/v1/patient/images/upload" this is needed as grpc itself does not handle file upload
+			if strings.HasPrefix(r.URL.Path, "/v1/patient/images/upload") {
+				handleUploadPatientImageHttp(w, r)
+				return
+			}
+
+			// For other routes, serve through CORS-enabled gRPC gateway
 			corsHandler.Handler(gwMux).ServeHTTP(w, r)
 		})
 

@@ -29,7 +29,7 @@ func init() {
 		},
 			[]string{"api"}),
 		jobLatency: prometheus.NewSummaryVec(prometheus.SummaryOpts{
-			Name:      "app_manager_job_completion_latency_seconds",
+			Name:      "job_completion_latency_seconds",
 			Namespace: NAMESPACE,
 			Subsystem: SUBSYSTEM,
 			Help:      "Initial Completion time Latency measure for app manager jobs",
@@ -42,8 +42,6 @@ func init() {
 	prometheus.MustRegister(META_MONITOR.jobLatency)
 
 }
-
-// Setter
 
 func (ms *MetaMonitorMetricType) SetGranularLabels(enable bool) {
 	ms.granularLabels = enable
@@ -60,8 +58,6 @@ func (ms *MetaMonitorMetricType) GetDbRequestLatencyVector() *prometheus.Summary
 func (ms *MetaMonitorMetricType) GetJobLatencyVector() *prometheus.SummaryVec {
 	return ms.jobLatency
 }
-
-// Getter
 
 func (ms *MetaMonitorMetricType) GetMetaMonitorDecoratorUrl() string {
 	if ms != nil {

@@ -18,6 +18,7 @@ if ! find . -type d -name "vendor" -exec rm -rf {} +; then
 fi
 echo "All vendor directories have been deleted."
 
+
 echo "Cleaning all the go cache"
 if ! go clean -cache -testcache -modcache; then
     echo "Failed to clean go cache."
@@ -41,15 +42,15 @@ BUILD_PROTO_SCRIPT_PATH="$WORKSPACE_DIR/build/etc/build_proto.sh"
 chmod +x "$BUILD_PROTO_SCRIPT_PATH"
 "$BUILD_PROTO_SCRIPT_PATH"
 
-# Setup MinIO
+## Setup MinIO
 echo "Setting up MinIO..."
 MINIO_SETUP_SCRIPT_PATH="$WORKSPACE_DIR/build/etc/dev/minio_setup.sh"
 chmod +x "$MINIO_SETUP_SCRIPT_PATH"
 "$MINIO_SETUP_SCRIPT_PATH"
-
-sleep 3
-
-# Setup PostgreSQL
+#
+#sleep 3
+#
+## Setup PostgreSQL
 echo "Setting up PostgreSQL..."
 POSTGRES_SETUP_SCRIPT_PATH="$WORKSPACE_DIR/build/etc/dev/postgres_setup.sh"
 chmod +x "$POSTGRES_SETUP_SCRIPT_PATH"

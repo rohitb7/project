@@ -2,6 +2,7 @@ package commonutils
 
 import (
 	"github.com/dlintw/goconf"
+	"math/rand"
 	"os"
 	"reflect"
 	"runtime"
@@ -43,7 +44,6 @@ func GetTimeFromConfig(c *goconf.ConfigFile, section string, field string, defau
 	}
 	currentTime = parsedTime
 	return currentTime
-
 }
 
 // Parse time duration field from conf
@@ -76,11 +76,13 @@ func RemovePaths(paths []string) error {
 	return nil
 }
 
-//func GenerateSecureRandomID(length int) (string, error) {
-//	bytes := make([]byte, length)
-//	_, err := rand.Read(bytes)
-//	if err != nil {
-//		return "", err
-//	}
-//	return hex.EncodeToString(bytes), nil
-//}
+// Function to generate a random string of given length using timestamp as seed
+func RandomStringUsingTimestamp(length int) string {
+	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	rand.Seed(time.Now().UnixNano())
+	b := make([]byte, length)
+	for i := range b {
+		b[i] = charset[rand.Intn(len(charset))]
+	}
+	return string(b)
+}

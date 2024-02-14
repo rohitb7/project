@@ -15,21 +15,35 @@
 
 
 
+
 _the below scripts adds default data to minio and postgres_
 
+## To Run On Docker = PREFERRED (can be seen as Prod env, no need to install the other  prerequisites)
+**Go to "Project" root terminal- <br />**
+chmod +x docker_build_all.sh <br />
+./docker_build_all.sh <br />
+
+
 ## To Run locally
-**Go to Project terminal- <br />**
+
+project needs to be in $GOPATH
+
+install protobuf protobuf-dev
+
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
+go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
+
+**Run in "Project" root terminal- <br />**
 export WORKSPACE_DIR=$(pwd) <br />
 echo "Workspace set to $WORKSPACE_DIR" <br />
 chmod +x ./build/etc/dev/build_all.sh <br />
 ./build/etc/dev/build_all.sh <br />
-./bin/patient_service <br />
+chmod +x ./bin/patient_service <br />
+./bin/patient_service -dev <br />
 
 
-## To Run On Docker (can be seen as Prod env)
-**Go to Project terminal- <br />**
-chmod +x docker_build_all.sh <br />
-./docker_build_all.sh <br />
 
 
 ## Current Setup: Patient-Service
@@ -92,13 +106,58 @@ Please check the Swagger s3_service.swagger.json  and the s3_service.proto file.
 # Asynchronous operations
 For asynchronous operations, there's an async_runner (check async_runner file).
 File uploads occur asynchronously now instead of using presigned URLs.
+Why preassignedUrl not for uploads?
 The choice depends on the use case. It's preferable not to block the client,
 especially for large file uploads. This can be controlled by a flag setting.
-This approach might increase the server's workload since files are temporarily stored on the server
-instead of being delegated to MinIO/S3. However, essential file processing, such as data extraction using worker nodes, is a popular use case.
+This approach will increase the server's workload since files are temporarily stored on the server
+instead of being delegated to MinIO/S3.
+However, essential file processing, such as data extraction using worker nodes, is a popular use case.
+Depends upon the use case!
+
+Task Manager, Worker pool, Workers, JobManager
+
+
+The system operates as follows:
+
+Task Manager Setup:
+
+Upon initialization, the Task Manager is configured with a pool of worker channels (workerPool) and a task queue (taskQueue) to manage tasks.
+It starts with a specified number of workers (maxWorker) and a name for identification.
+Worker Initialization:
+
+Workers are created and added to the worker pool during Task Manager startup. Each worker has its own channel for receiving tasks.
+Task Submission:
+
+Tasks are submitted to the Task Manager via the SubmitTask method.
+The Task Manager adds tasks to its task queue for later distribution to available workers.
+Task Distribution:
+
+The Task Manager's dispatch goroutine continuously listens for incoming tasks from the task queue.
+When a task is available, the Task Manager selects an idle worker channel from the worker pool.
+It dispatches the task to the selected worker's channel for execution.
+Worker Execution:
+
+Each worker listens for tasks on its channel.
+When a task is received, the worker executes it.
+Task Completion:
+
+Upon task completion, the worker becomes idle again, and its channel is returned to the worker pool for reuse.
+Job Management Integration:
+
+The Job Manager interacts with the Task Manager to register, remove, and cancel jobs.
+Registering a job involves submitting the task to the Task Manager for execution by the worker pool.
+Removing a job removes it from the Task Manager's internal context.
+Canceling a job cancels its associated task execution through context cancellation.
+Shutdown:
+
+When the Task Manager is stopped, it signals all workers to stop execution and closes its channels.
+This ensures a graceful shutdown of the Task Manager and its associated workers.
+
 
 # Synchronous operations
 File downloads occur synchronously using a presigned URL.
+
+
 
 
 # ---------------------------------------------
@@ -155,3 +214,11 @@ Searching. No search implemented currently in any api. <br />
 Also enhance the blob-service for more features. AWS sdk helps in that. It can be a service for other services. <br />
 
 Also all the above mentioned earlier.
+
+Pending items..
+makefile ..using bash scripts for now
+incase error returning the what grpc send,
+ideally there should be data massaging to tell the user what exactly the error is.
+Grpc gateway is
+
+

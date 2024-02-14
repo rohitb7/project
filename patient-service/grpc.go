@@ -16,11 +16,8 @@ type PatientImageServiceGRPCServer struct {
 // it also keeps tracks of upload status and its keeps track of its progress (currently logging but not stored in db)
 // basically a worker get assinged from a worker pool and do the file upload async
 func (s *PatientImageServiceGRPCServer) UploadPatientImage(ctx context.Context, req *protos.UploadPatientImageRequest) (resp *protos.UploadPatientImageResponse, err error) {
-	resp = handleUploadPatientImage(req, ctx)
-	if resp.GetResult().GetError() != nil && len(resp.GetResult().GetError().GetMessage()) > 0 {
-		return resp, fmt.Errorf("%v", resp.GetResult().GetError().GetMessage())
-	}
-	return resp, nil
+	// handle gracefully: thisis handled with http and not grpc
+	panic("implement me")
 }
 
 // ListPatientImages

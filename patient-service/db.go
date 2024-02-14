@@ -19,53 +19,25 @@ func postgresStart() {
 	defer db.Close()
 }
 
-//func connectToDB() *sql.DB {
-//
-//	// Open the connection
-//	db, err := sql.Open("postgres", psqlInfo)
-//	if err != nil {
-//		log.Fatal("Error connecting to the database: ", err)
-//	}
-//
-//	// Check the connection
-//	err = db.Ping()
-//	if err != nil {
-//		log.Fatal("Error pinging the database: ", err)
-//	}
-//
-//	fmt.Println("Successfully connected to the database!")
-//	return db
-//}
-
 // FOR DOCKER
 func connectToDB() *sql.DB {
-
 	var psqlInfo string
-
 	if restGrpcCfg.Mode == "dev" {
 		//FOR LOCAL DEVELOPMENT
-		psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-			"password=%s dbname=%s sslmode=disable",
+		psqlInfo = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 			sqlDbCfg.Server, sqlDbCfg.Port, sqlDbCfg.Username, sqlDbCfg.Password, sqlDbCfg.DatabaseName)
-
-		println("psqlInfo", psqlInfo)
 	} else {
 		// FOR DOCKER
 		psqlInfo = "host=postgres-patients user=postgres " + "password=mysecretpassword dbname=patients_db sslmode=disable"
 	}
-
-	// Open the connection
 	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
 		log.Fatal("Error connecting to the database: ", err)
 	}
-
-	// Check the connection
 	err = db.Ping()
 	if err != nil {
 		log.Fatal("Error pinging the database: ", err)
 	}
-
 	fmt.Println("Successfully connected to the database!")
 	return db
 }
@@ -223,7 +195,7 @@ func uploadPatientImageHandlerDB(req *protos.UploadPatientImageRequest, bucketPa
 
 	var imageID int
 	err = tx.QueryRow("INSERT INTO images (patient_id, bucket_path, name, description, upload_date) VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP) RETURNING id",
-		req.PatientImage.Patient.Id, bucketPath, req.PatientImage.Image.Name, req.PatientImage.Image.Description).Scan(&imageID)
+		req.PatientImage.PatientId, bucketPath, req.PatientImage.Image.Name, req.PatientImage.Image.Description).Scan(&imageID)
 	if err != nil {
 		tx.Rollback()
 		return nil, err
@@ -239,7 +211,6 @@ func uploadPatientImageHandlerDB(req *protos.UploadPatientImageRequest, bucketPa
 				tx.Rollback()
 				return nil, err
 			}
-
 			_, err = tx.Exec("INSERT INTO image_tags (image_id, tag_id) VALUES ($1, $2) ON CONFLICT DO NOTHING", imageID, tagID)
 			if err != nil {
 				tx.Rollback() // rollback in case of error
@@ -248,7 +219,6 @@ func uploadPatientImageHandlerDB(req *protos.UploadPatientImageRequest, bucketPa
 		}
 	}
 
-	// Commit
 	if err = tx.Commit(); err != nil {
 		return nil, err
 	}

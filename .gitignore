@@ -1,0 +1,7 @@
+/vendor/
+/blob-service/s3-conf/vendor/
+/blob-service/core/vendor/
+/blob-service/s3-manager/vendor/
+/commonutils/vendor/
+/patient-service/vendor/
+/vendor/

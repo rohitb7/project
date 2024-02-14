@@ -104,15 +104,15 @@ enum DATASTORE {
 	AZURE_BLOB = 3;
 }
 
+message FileChunk {
+	bytes data = 1;
+}
+
 // CreateOrUpdateBlobRequest - Create or Update a blob in remote storage
 message UploadPatientImageRequest {
 	PatientImage patient_image = 1;
 	Tags tags = 2;
-	// The image file content, sent as bytes
-	bytes content = 3;
-	string filename = 5;
-	// Additional metadata if necessary, like content type
-	string content_type = 4;
+	string file_path = 3;
 }
 
 // CreateOrUpdateBlobResponse Async job id that needs to tracked for success or failure
@@ -132,7 +132,7 @@ message DownloadPatientImageListRequest {
 }
 
 message PatientImage {
-	PatientUI patient = 1;
+	string patient_id = 1;
 	ImageUI image = 2;
 }
 
@@ -257,7 +257,7 @@ service PatientImageService {
 	// UploadPatientImage Upload a image of patient
 	rpc UploadPatientImage(UploadPatientImageRequest) returns (UploadPatientImageResponse) {
 		option (google.api.http) = {
-			post: "/v1/patient/image/upload"
+			post: "/v1/patient/images/upload"
 			body: "*"
 		};
 	}
@@ -267,7 +267,7 @@ service PatientImageService {
 		// go protobuf does not allow /v1/patient/{patient_id}images, hence using /v1/patient/images
 		option (google.api.http) = {
       // "/v1/patient/{patient.id}/images" requests needs to be /v1/patient/images/list types rather /v1/patient/{patient.id}/images since body payload
-			post: "/v1/patient/image/list"
+			post: "/v1/patient/images/list"
 			body: "*"
 		};
 	}

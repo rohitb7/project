@@ -13,7 +13,7 @@ LABEL_VALUE="test"
 
 # Pull the latest PostgreSQL image
 echo "Pulling the latest PostgreSQL Docker image..."
-docker pull postgres
+docker pull postgres:11
 
 # Check for existing container and stop it
 if [ $(docker ps -a -q -f name=^/${CONTAINER_NAME}$) ]; then
