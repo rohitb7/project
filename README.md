@@ -26,7 +26,7 @@ grpc 9798 <br />
 minio on 9000, 9001  username:password is minioadmin:minioadmin <br />
 UI 3000 <br />
 
-## To Run On Docker =  (can be seen as Prod env, no need to install the other  prerequisites)
+## To Run On Docker =  (currently file upload is not supported. can be seen as Prod env, no need to install the other  prerequisites)
 **Go to "Project" root terminal- <br />**
 chmod +x docker_build_all.sh <br />
 ./docker_build_all.sh <br />
@@ -145,19 +145,18 @@ The system operates as follows:
 
 Upon initialization, the Task Manager is configured with a pool of worker channels (workerPool) and a task queue (taskQueue) to manage tasks.
 It starts with a specified number of workers (maxWorker) and a name for identification.
-Worker Initialization:
+
 
 Workers are created and added to the worker pool during Task Manager startup. Each worker has its own channel for receiving tasks.
-Task Submission:
+
 
 Tasks are submitted to the Task Manager via the SubmitTask method.
 The Task Manager adds tasks to its task queue for later distribution to available workers.
-Task Distribution:
+
 
 The Task Manager's dispatch goroutine continuously listens for incoming tasks from the task queue.
 When a task is available, the Task Manager selects an idle worker channel from the worker pool.
 It dispatches the task to the selected worker's channel for execution.
-Worker Execution:
 
 Each worker listens for tasks on its channel.
 When a task is received, the worker executes it.
@@ -198,14 +197,14 @@ if we separate the 2 services
 Unlike traditional threads, Goroutines are cheap to create and have minimal overhead,
 making it practical to use thousands or even millions of Goroutines within a single application.
 I work on a system where at a once we are creating more than 20K threads and still see very minimum cpu and memory utilization.
-Any sql would do,I have familiarity with postgres
+For database, Any sql would do,I have familiarity with postgres.
 
 ##  If you had another week of prototyping time, what functionality would you want to add?
 As discussed above separate the patient-service and make patient-service and blob service
 
 ideally....  <br />
-patient-service =>  mysql for patients  <br />
-blob-service =>  nosql for file metadata + s3
+**patient-service =>  mysql for patient**s  <br />
+**blob-service =>  nosql for file metadata + s3**
 
 currently....  <br />
 patient-service =>  mysql for patients + blob-service  <br />
@@ -226,8 +225,8 @@ UI for all above  <br />
 
 ## If we wanted to deploy this to a real hospital setting, what features would we need to add and what other development activities would you want to do before declaring it ready?
 
-Adding fare more REST endpoints required in an enterprise application <br />
-Handling scalability using Data replication, CDN, async like kafka, caching
+Adding far more REST endpoints required in an enterprise application <br />
+Handling scalability using Data replication, CDN, utilize messaging like kafka, caching <br />
 Authentication <br />
 Authorization <br />
 Dynamic tags <br />
@@ -237,10 +236,10 @@ Also enhance the blob-service for more features. AWS sdk helps in that. It can b
 
 Also all the above mentioned earlier.
 
-Pending items..
+**Pending items..
 makefile ..using bash scripts for now
-incase error returning the what grpc send,
-ideally there should be data massaging to tell the user what exactly the error is.
-Grpc gateway is
+API error handling and status codes ,
+ideally there should be data massaging to tell the user what exactly the error is.**
+
 
 
