@@ -23,14 +23,14 @@ INFO[0000] Starting gRPC server on: localhost:9798
 localhost ports in use  <br />
 http 9797 <br />
 grpc 9798 <br />
-minio 9000, 9001 <br />
+minio on 9000, 9001  username:password is minioadmin:minioadmin <br />
 UI 3000 <br />
 
-## To Run On Docker = PREFERRED (can be seen as Prod env, no need to install the other  prerequisites)
+## To Run On Docker =  (can be seen as Prod env, no need to install the other  prerequisites)
 **Go to "Project" root terminal- <br />**
 chmod +x docker_build_all.sh <br />
 ./docker_build_all.sh <br />
-
+docker logs -f "patient-service"
 
 ## To Run locally
 

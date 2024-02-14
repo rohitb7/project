@@ -9,17 +9,6 @@ import (
 type PatientImageServiceGRPCServer struct {
 }
 
-// UploadPatientImage
-// Asynchronous call
-// this method stores data in db, and uploads file asynchronously.
-// this does not use presignurl as a general use case might be to process the file and its validate
-// it also keeps tracks of upload status and its keeps track of its progress (currently logging but not stored in db)
-// basically a worker get assinged from a worker pool and do the file upload async
-func (s *PatientImageServiceGRPCServer) UploadPatientImage(ctx context.Context, req *protos.UploadPatientImageRequest) (resp *protos.UploadPatientImageResponse, err error) {
-	// handle gracefully: thisis handled with http and not grpc
-	panic("implement me")
-}
-
 // ListPatientImages
 // Synchronous call
 // this method stores data in db, and gets the presignedurl from minio
@@ -30,6 +19,17 @@ func (s *PatientImageServiceGRPCServer) ListPatientImages(ctx context.Context, r
 		return resp, fmt.Errorf("%v", resp.GetResult().GetError().GetMessage())
 	}
 	return resp, nil
+}
+
+// UploadPatientImage
+// Asynchronous call..redundant. grpc deoes not handle file upload!!
+// this method stores data in db, and uploads file asynchronously.
+// this does not use presignurl as a general use case might be to process the file and its validate
+// it also keeps tracks of upload status and its keeps track of its progress (currently logging but not stored in db)
+// basically a worker get assinged from a worker pool and do the file upload async
+func (s *PatientImageServiceGRPCServer) UploadPatientImage(ctx context.Context, req *protos.UploadPatientImageRequest) (resp *protos.UploadPatientImageResponse, err error) {
+	// handle gracefully: this handled with http and not grpc
+	panic("implement me")
 }
 
 func (s *PatientImageServiceGRPCServer) GetPatientImage(ctx context.Context, request *protos.RetrievePatientImageRequest) (*protos.Result, error) {

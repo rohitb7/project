@@ -49,9 +49,8 @@ func PutBlob(sourcePath string, blobCtx core.BlobContext, ctx context.Context, o
 
 	//Defer is scheduled at the start to be called at the end the function returns
 	defer func(startTime time.Time) {
-		// Error counter
 		if err != nil {
-			log.WithFields(log.Fields{"err": err}).Error("failed to stat file") // parameter in label values should match the array size in metric definition
+			log.WithFields(log.Fields{"err": err}).Error("failed to upload file")
 			core.StorageMetaMonitor.GetAPICounter().
 				WithLabelValues(commonutils.GetFunctionName(PutBlob), core.MetaMonitorFAIL).Inc()
 		} else {
@@ -68,7 +67,7 @@ func PutBlob(sourcePath string, blobCtx core.BlobContext, ctx context.Context, o
 			Operation: core.OperationFailure,
 			Err:       err,
 		}
-		log.WithFields(log.Fields{"err": err}).Error("failed to stat file")
+		log.WithFields(log.Fields{"err": err}).Error("failed to upload file")
 		return err
 	}
 
@@ -105,13 +104,25 @@ func PutBlob(sourcePath string, blobCtx core.BlobContext, ctx context.Context, o
 	// metadata keys has to be all smallcase
 	metaData[FileModTime] = cT
 
-	input := &s3.PutObjectInput{
-		Bucket:       aws.String(bucket),
-		Key:          aws.String(blobCtx.RemotePathKey),
-		Body:         reader,
-		Metadata:     metaData,
-		StorageClass: types.StorageClass(strings.ToUpper(s3Man.S3ManagerConfig.S3StorageClass)),
+	var input *s3.PutObjectInput
+	if getS3ManagerMain().S3Option.Config.Mode == "docker" {
+		input = &s3.PutObjectInput{
+			Bucket:       aws.String(bucket),
+			Key:          aws.String(ExtractFilename(blobCtx.RemotePathKey)),
+			Body:         reader,
+			Metadata:     metaData,
+			StorageClass: types.StorageClass(strings.ToUpper(s3Man.S3ManagerConfig.S3StorageClass)),
+		}
+	} else {
+		input = &s3.PutObjectInput{
+			Bucket:       aws.String(bucket),
+			Key:          aws.String(blobCtx.RemotePathKey),
+			Body:         reader,
+			Metadata:     metaData,
+			StorageClass: types.StorageClass(strings.ToUpper(s3Man.S3ManagerConfig.S3StorageClass)),
+		}
 	}
+
 	var resp *manager.UploadOutput
 	var retryFn = func() (err error) {
 		retryCtx, cancel := context.WithTimeout(ctx, s3Man.S3ManagerConfig.MaxUploadContextTimeout)
