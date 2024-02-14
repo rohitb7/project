@@ -31,13 +31,11 @@ func PutBlob(sourcePath string, blobCtx core.BlobContext, ctx context.Context, o
 
 	bucket := blobCtx.HierarchyIdentifier.Bucket
 
-	remotePathKey := ExtractFilename(blobCtx.RemotePathKey)
-
 	f := log.Fields{
 		"S3Provider":    s3Man.S3Option.Config.S3Provider,
 		"Endpoint":      s3Man.S3Option.Config.URL,
 		"sourcePath":    sourcePath,
-		"remotePathKey": remotePathKey,
+		"remotePathKey": blobCtx.RemotePathKey,
 		"Bucket":        bucket,
 		"Context":       ctx,
 	}
@@ -109,7 +107,7 @@ func PutBlob(sourcePath string, blobCtx core.BlobContext, ctx context.Context, o
 
 	input := &s3.PutObjectInput{
 		Bucket:       aws.String(bucket),
-		Key:          aws.String(remotePathKey),
+		Key:          aws.String(blobCtx.RemotePathKey),
 		Body:         reader,
 		Metadata:     metaData,
 		StorageClass: types.StorageClass(strings.ToUpper(s3Man.S3ManagerConfig.S3StorageClass)),

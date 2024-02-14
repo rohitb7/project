@@ -17,6 +17,15 @@ NOTE: the script runs docker prune: comment if you have docker images in use
 
 _the below scripts adds default data to minio and postgres_
 
+INFO[0000] Data Store Service: starting HTTP/1.1 REST server on: :9797
+INFO[0000] Starting gRPC server on: localhost:9798
+
+localhost ports in use  <br />
+http 9797 <br />
+grpc 9798 <br />
+minio 9000, 9001 <br />
+UI 3000 <br />
+
 ## To Run On Docker = PREFERRED (can be seen as Prod env, no need to install the other  prerequisites)
 **Go to "Project" root terminal- <br />**
 chmod +x docker_build_all.sh <br />
