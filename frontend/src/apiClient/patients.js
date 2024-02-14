@@ -47,30 +47,27 @@ export const fetchPatientImages = async () => {
 export const uploadFile = async (selectedFile, fileName, contentType) => {
 	const url = `http://localhost:9797/v1/patient/images/upload`;
 
-	// const formData = new FormData();
-	// formData.append(fileName, selectedFile);
-
 	const formData = new FormData();
 	formData.append("file", selectedFile);
 
 	console.log("formData", formData.get(fileName));
 
-	const payload = {
+	const payload = 	{
 		patientImage: {
-			patient: {
-				id: "string",
-			},
+			patientId: "1",
 			image: {
-				name: "string",
+				name: string,
 				description: "string",
-				tags: ["string"],
-			},
+				tags: [
+					"tag1"
+				]
+			}
 		},
-		tags: ["tag1"],
-		content: "string",
-		filename: fileName,
-		contentType: contentType,
-	};
+		tags: {
+			tag: []
+		},
+		filePath: ""
+	}
 
 	formData.append("payload", payload)
 
