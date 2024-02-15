@@ -107,6 +107,10 @@ NOTE. introduces complexities in error handling that can be further addressed.
 ![Link](./arch.png)
 
 
+##  Future Architecture
+
+![Link](./future_arch.png)
+
 
 ##  Current databsae schema
 
