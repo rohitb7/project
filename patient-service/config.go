@@ -417,7 +417,7 @@ func (restGrpcConfig *RestGrpcConfiguration) Start() error {
 			lis, err := net.Listen("tcp", restGrpcConfig.grpcPortAddress)
 			if err != nil {
 				log.WithFields(log.Fields{"error": err.Error()}).Error("gRPC server startup failed")
-				log.WithFields(log.Fields{"retry": fmt.Sprintf("%d of %d retries", i+1, restGrpcConfig.retries)}).Info("Data Store Service : gRPC Server retry")
+				log.WithFields(log.Fields{"retry": fmt.Sprintf("%d of %d retries", i+1, restGrpcConfig.retries)}).Info("Patient Service : gRPC Server retry")
 				time.Sleep(1 * time.Second)
 				continue
 			}
@@ -437,10 +437,10 @@ func (restGrpcConfig *RestGrpcConfiguration) Start() error {
 			}
 
 			if err == nil {
-				log.Info("Data Store Service: gRPC Server started")
+				log.Info("Patient: gRPC Server started")
 				break
 			} else {
-				log.WithFields(log.Fields{"retry": fmt.Sprintf("%d of %d retries", i+1, restGrpcConfig.retries)}).Info("Data Store Service : gRPC Server retry")
+				log.WithFields(log.Fields{"retry": fmt.Sprintf("%d of %d retries", i+1, restGrpcConfig.retries)}).Info("Patient : gRPC Server retry")
 			}
 			time.Sleep(1 * time.Second)
 		}
@@ -456,7 +456,7 @@ func (restGrpcConfig *RestGrpcConfiguration) Start() error {
 		for i := 0; i < restGrpcConfig.retries; i++ {
 			err := startRESTServer(restGrpcConfig)
 			if err == nil {
-				log.Info("Data Store Service: REST Server started")
+				log.Info("Patient Service: REST Server started")
 				break
 			} else {
 				log.WithFields(log.Fields{"retry": fmt.Sprintf("%d of %d retries", i+1, restGrpcConfig.retries)}).Info("Cluster-Boot: REST Server retry")
@@ -504,9 +504,9 @@ func startRESTServer(rgc *RestGrpcConfiguration) (err error) {
 		return err
 	}
 	if err != nil {
-		log.WithFields(log.Fields{"Error": err, "Server": "Data Store Service"}).Error("Registration service handler from endpoint failed for REST")
+		log.WithFields(log.Fields{"Error": err, "Server": "Patient Service"}).Error("Registration service handler from endpoint failed for REST")
 	} else {
-		log.WithFields(log.Fields{"Server": "Data Store Service"}).Info("Registration of service handler from end point success for REST")
+		log.WithFields(log.Fields{"Server": "Patient Service"}).Info("Registration of service handler from end point success for REST")
 	}
 
 	// Setup CORS middleware
@@ -564,10 +564,10 @@ func startRESTServer(rgc *RestGrpcConfiguration) (err error) {
 			corsHandler.Handler(gwMux).ServeHTTP(w, r)
 		})
 
-		log.Info("Data Store Service: starting HTTP/1.1 REST server on: " + rgc.httpPortAddress)
+		log.Info("Patient Service: starting HTTP/1.1 REST server on: " + rgc.httpPortAddress)
 		err := http.ListenAndServe(rgc.httpPortAddress, httpMux)
 		if err != nil {
-			log.WithFields(log.Fields{"error": err.Error(), "http port": rgc.httpPortAddress}).Error("Data Store Server : Failed to start REST server")
+			log.WithFields(log.Fields{"error": err.Error(), "http port": rgc.httpPortAddress}).Error("Patient ServiceServer : Failed to start REST server")
 		}
 	}
 	return err
@@ -577,11 +577,11 @@ func startRESTServer(rgc *RestGrpcConfiguration) (err error) {
 func (restGrpcConfig *RestGrpcConfiguration) Close() {
 	//TODO  need to see if we need to do anything else on this
 	if restGrpcConfig != nil && restGrpcConfig.Rest.ConnContext != nil {
-		log.Info("Data Store Service: closing HTTP/1.1 REST server on: " + restGrpcConfig.Rest.GRPCPort)
+		log.Info("Patient Service: closing HTTP/1.1 REST server on: " + restGrpcConfig.Rest.GRPCPort)
 		restGrpcConfig.Rest.ConnContext.Done()
 	}
 	if restGrpcConfig != nil && restGrpcConfig.GRPC.Server != nil {
-		log.Info("Data Store  Service: closing gRPC server on: " + restGrpcConfig.grpcPortAddress)
+		log.Info("Patient Service Service: closing gRPC server on: " + restGrpcConfig.grpcPortAddress)
 		restGrpcConfig.GRPC.Server.GracefulStop()
 	}
 }
