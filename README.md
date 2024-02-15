@@ -198,6 +198,8 @@ Unlike traditional threads, Goroutines are cheap to create and have minimal over
 making it practical to use thousands or even millions of Goroutines within a single application.
 I work on a system where at a once we are creating more than 20K threads and still see very minimum cpu and memory utilization.
 For database, Any sql would do,I have familiarity with postgres.
+**Also like I mentioned, for file metadata a nosql and schemaless database is appropriate, especially for tags which can be indexed better in nodql, To keep the scope simple I have used postgres only**
+
 
 ##  If you had another week of prototyping time, what functionality would you want to add?
 As discussed above separate the patient-service and make patient-service and blob service
