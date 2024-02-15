@@ -31,13 +31,13 @@ docker run -d --restart unless-stopped \
 
 # Wait for MinIO to start up
 echo "Waiting for MinIO to start..."
-sleep 10
+sleep 30
 
 # Create the MinIO bucket using the mc command
 echo "Creating bucket..."
 docker exec $MINIO_DOCKER_NAME /bin/sh -c "\
-  /usr/bin/mc alias set myminio http://localhost:$MINIO_PORT $MINIO_ACCESS_KEY $MINIO_SECRET_KEY && \
-  /usr/bin/mc mb myminio/$MINIO_BUCKET"
+  mc alias set myminio http://localhost:$MINIO_PORT $MINIO_ACCESS_KEY $MINIO_SECRET_KEY && \
+  mc mb myminio/$MINIO_BUCKET"
 
 # Validate the bucket creation
 if [ $? -ne 0 ]; then

@@ -105,22 +105,12 @@ func PutBlob(sourcePath string, blobCtx core.BlobContext, ctx context.Context, o
 	metaData[FileModTime] = cT
 
 	var input *s3.PutObjectInput
-	if getS3ManagerMain().S3Option.Config.Mode == "docker" {
-		input = &s3.PutObjectInput{
-			Bucket:       aws.String(bucket),
-			Key:          aws.String(ExtractFilename(blobCtx.RemotePathKey)),
-			Body:         reader,
-			Metadata:     metaData,
-			StorageClass: types.StorageClass(strings.ToUpper(s3Man.S3ManagerConfig.S3StorageClass)),
-		}
-	} else {
-		input = &s3.PutObjectInput{
-			Bucket:       aws.String(bucket),
-			Key:          aws.String(blobCtx.RemotePathKey),
-			Body:         reader,
-			Metadata:     metaData,
-			StorageClass: types.StorageClass(strings.ToUpper(s3Man.S3ManagerConfig.S3StorageClass)),
-		}
+	input = &s3.PutObjectInput{
+		Bucket:       aws.String(bucket),
+		Key:          aws.String(blobCtx.RemotePathKey),
+		Body:         reader,
+		Metadata:     metaData,
+		StorageClass: types.StorageClass(strings.ToUpper(s3Man.S3ManagerConfig.S3StorageClass)),
 	}
 
 	var resp *manager.UploadOutput
